@@ -1,4 +1,14 @@
 /* Base Application Styles */
+@font-face{
+  font-family:"icons-turn-arrow";
+  src:url("../images/icons/turn-arrow.svg") format("svg"); src: url('//at.alicdn.com/t/font_mpj8vjwivrifi529.eot');
+  src: url('//at.alicdn.com/t/font_mpj8vjwivrifi529.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_mpj8vjwivrifi529.woff') format('woff'),
+  url('//at.alicdn.com/t/font_mpj8vjwivrifi529.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_mpj8vjwivrifi529.svg#iconfont') format('svg');
+
+}
+
 html, body {
   width: 100%;
   height: 100%;
@@ -13,7 +23,7 @@ html, body {
 .stage {
   position: relative;
   width: 100%;
-  height: 690px;
+  height: 100%;
 }
 
 .img-sec {
@@ -34,6 +44,16 @@ html, body {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 
+    cursor: pointer;
+    transform-origin: 0 50% 0;
+    transform-style: preserve-3d;
+    prespective: 1800px;
+    transition: transform .6s ease-in-out, left .6s ease-in-out, top .6s ease-in-out;
+
+    &.is-inverse{
+      transform: translate(320px) rotateY(180deg);
+    }
+
     img {
       width: 100%;
     }
@@ -44,6 +64,21 @@ html, body {
       .img-title {
         margin: 20px 0 0 0;
         color: silver;
+      }
+
+      .img-back{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        padding: 30px;
+        box-sizing: border-box;
+        text-align: center;
+        color: #666;
+        transform: rotateY(180deg) translateZ(1px);
+        background: #fff;
+        backface-visibility: hidden;
       }
     }
   }
@@ -57,25 +92,37 @@ html, body {
 
   width: 100%;
   text-align: center;
-}
 
-body {
-  color: #fff;
-  background: #222;
-}
+ .controller-unit {
+   display: inline-block;
+   margin: 0 5px;
+   width: 30px;
+   height: 30px;
+   text-align: center;
+   cursor: pointer;
+   background-color: #aaa;
+   border-radius: 50%;
+   transform: scale(.5);
+   vertical-align: middle;
+   transiton: transform .6s ease-in-out, background-color .3s;
 
-.index img {
-  margin: 40px auto;
-  border-radius: 4px;
-  background: #fff;
-  display: block;
-}
+  &.is-center{
+    background-color: #999;
+    transform: scale(1);
 
-.index .notice {
-  margin: 20px auto;
-  padding: 15px 0;
-  text-align: center;
-  border: 1px solid #000;
-  border-width: 1px 0;
-  background: #666;
-}
+    &::after{
+      color: #fff;
+      font-family: "icons-turn-arrow";
+      line-height: 30px;
+
+      content: "\e651";
+
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    &.is-inverse{
+      background-color: #666;
+      transform: rotateY(180deg);
+    }
+  }
+}}

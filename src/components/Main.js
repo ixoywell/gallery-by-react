@@ -2,6 +2,7 @@ require('normalize.css/normalize.css');
 require('styles/App.less');
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 var imageDatas = require('../stores/imgDatas.json');
 //let yeomanImage = require('../images/yeoman.png');
@@ -49,7 +50,7 @@ var ImgFigure = React.createClass({
         var styleObj = {};
         if(this.props.arrange.pos){
             styleObj = this.props.arrange.pos;
-        };
+        }
 
         if(this.props.arrange.rotate){
             (['-moz-','-ms-','-webkit-','']).forEach(function(value){
@@ -65,7 +66,7 @@ var ImgFigure = React.createClass({
         imgFigureClassName += this.props.arrange.isInverse ? ' is-inverse' : '';
 
         return(
-            <figure className="imgFigureClassName" style={styleObj} onClick={this.handleClick}>
+            <figure className={imgFigureClassName} style={styleObj} onClick={this.handleClick}>
                 <img src={this.props.data.imageURL} alt={this.props.data.title}/>
                 <figcaption>
                     <h2 className="img-title">{this.props.data.title}</h2>
@@ -95,13 +96,13 @@ var ControllerUnit = React.createClass({
     },
 
     render(){
-        var controllerUnitClassName = "controller-unit";
+        var controllerUnitClassName = 'controller-unit';
 
         if(this.props.arrange.isCenter){
-            controllerUnitClassName += " is-center";
+            controllerUnitClassName += ' is-center';
 
             if(this.props.arrange.isInverse){
-                controllerUnitClassName += " is-inverse";
+                controllerUnitClassName += ' is-inverse';
             }
         }
 
@@ -176,7 +177,7 @@ class AppComponent extends React.Component {
      * @param centerIndex 指定居中排布那个图片
      */
     rearrange(centerIndex) {
-        var imgsArrageArr = this.state.imgsArrageArr,
+        var imgsArrangeArr = this.state.imgsArrangeArr,
             Constant = this.Constant,
             centerPos = Constant.centerPos,
             hPosRange = Constant.hPosRange,
@@ -190,10 +191,10 @@ class AppComponent extends React.Component {
             imgsArrangeTopArr = [],
             topImgNum = Math.ceil(Math.random()* 2), //取一个或者不取
             topImgSpliceIndex = 0,
-            imgsArrangeCenterArr = imgsArrageArr.splice(centerIndex,1);
+            imgsArrangeCenterArr = imgsArrangeArr.splice(centerIndex,1);
 
         // 首先居中 centerIndex 的图片,居中的centerIndex不用旋转
-        imgsArrageCenterArr[0]={
+        imgsArrangeCenterArr[0]={
             pos : centerPos,
             rotate : 0,
             isCenter : true
@@ -201,7 +202,7 @@ class AppComponent extends React.Component {
 
         // 取出要布局上侧的图片状态信息
         topImgSpliceIndex = Math.ceil(Math.random() * (imgsArrangeArr.length - topImgNum));
-        imgsArrageTopArr = imgsArrageArr.splice(topImgSpliceIndex,topImgNum);
+        imgsArrangeTopArr = imgsArrangeArr.splice(topImgSpliceIndex,topImgNum);
 
         //布局位于上侧的图片
         imgsArrangeTopArr.forEach(function (value,index) {
@@ -216,7 +217,7 @@ class AppComponent extends React.Component {
         })
 
         //布局位于两侧的图片
-        for(var i = 0, len = imgsArrageArr.length, k = len / 2; i < len; i++ ){
+        for(var i = 0, len = imgsArrangeArr.length, k = len / 2; i < len; i++ ){
             var hPosRangeLORX = null;
 
             //前半部分布局左侧， 右半部分布局右侧
@@ -224,9 +225,9 @@ class AppComponent extends React.Component {
                 hPosRangeLORX = hPosRangeLeftSecX;
             }else{
                 hPosRangeLORX = hPosRangeRightSecX;
-            };
+            }
 
-            imgsArrageArr[i] = {
+            imgsArrangeArr[i] = {
                 pos:{
                     top: getRangeRandom(hPosRangeY[0], hPosRangeY[1]),
                     left: getRangeRandom(hPosRangeLORX[0], hPosRangeLORX[1])
@@ -237,21 +238,21 @@ class AppComponent extends React.Component {
         }
 
         if(imgsArrangeTopArr && imgsArrangeTopArr[0]){
-            imgsArrageArr.splice(topImgSpliceIndex, 0, imgsArrangeTopArr[0]);
-        };
+            imgsArrangeArr.splice(topImgSpliceIndex, 0, imgsArrangeTopArr[0]);
+        }
 
-        imgsArrageArr.splice(centerIndex, 0, imgsArrangeCenterArr[0]);
+        imgsArrangeArr.splice(centerIndex, 0, imgsArrangeCenterArr[0]);
 
         this.setState({
-            imgsArrangeArr: imgsArrageArr
+            imgsArrangeArr: imgsArrangeArr
         });
-    };
+    }
     //利用rearrange，居中对应index的图片
     center(index){
         return function(){
             this.rearrange(index);
         }.bind(this);
-    };
+    }
 
 //    getInitialState = function(){
 //        return{
@@ -268,14 +269,13 @@ class AppComponent extends React.Component {
 // 组件加载后，为每张图片计算其位置范围
     componentDidMount(){
     //获取舞台大小
-    var stageDOM = React.findDOMNode(this.refs.stage),
+    var stageDOM = ReactDOM.findDOMNode(this.refs.stage),
         stageW = stageDOM.scrollWidth,
         stageH = stageDOM.scrollHeight,
         halfStageW = Math.ceil(stageW/2),
         halfStageH = Math.ceil(stageH/2);
 
-
-    var imgFigureDOM = React.findDOMNode(this.refs.imgFigure0),
+    var imgFigureDOM = ReactDOM.findDOMNode(this.refs.imgFigure0),
         imgW = imgFigureDOM.scrollWidth,
         imgH = imgFigureDOM.scrollHeight,
         halfImgW = Math.ceil(imgW/2),
@@ -289,7 +289,7 @@ class AppComponent extends React.Component {
 
         //计算左侧，右侧区域图片排布位置的取值范围
         this.Constant.hPosRange.leftSecX[0] = -halfImgW;
-        this.Constant.hPosRange.leftSecX[1] = -halfStageW - halfImgW*3;
+        this.Constant.hPosRange.leftSecX[1] = halfStageW - halfImgW*3;
 
         this.Constant.hPosRange.rightSecX[0] = halfStageW + halfImgW;
         this.Constant.hPosRange.rightSecX[1] = stageW - halfImgW*3;
@@ -304,7 +304,7 @@ class AppComponent extends React.Component {
 
         var num = Math.floor(Math.random() * 10);
         this.rearrange(num);
-};
+}
 
   render() {
     //return (
@@ -336,7 +336,7 @@ class AppComponent extends React.Component {
                                      inverse={this.inverse(index)}
                                      center={this.center(index)}/>);
 
-          controllerUnits.push(<ControllerUnit
+          controllerUnits.push(<ControllerUnit key={index}
               arrange={this.state.imgsArrangeArr[index]}
               inverse={this.inverse(index)}
               center={this.center(index)}/>);
